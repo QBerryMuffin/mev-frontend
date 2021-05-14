@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="Org Name">
-        <el-input v-if="orgName === 'default'" v-model="orgName" readonly style="width: 200px;" class="filter-item"/>
-        <el-input v-else v-model="orgName" placeholder="Title" style="width: 200px;" class="filter-item"/>
+        <el-input v-if="org.name === 'default'" v-model="org.name" readonly style="width: 200px;" class="filter-item"/>
+        <el-input v-else v-model="org.name" placeholder="Title" style="width: 200px;" class="filter-item"/>
       </el-form-item>
       <el-form-item label="Description">
         <el-input v-model="org.decription" style="width: 200px;" class="filter-item" />
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { getOrg } from '@/api/org'
+import { getOrg, saveOrg } from '@/api/org'
 
 export default {
   props: {
@@ -97,6 +97,7 @@ export default {
       attributeNames: null,
       orgName: this.type,
       loading: false,
+      saving: false,
       serverType: ["CUCM", "IMP", "CUC"]
     }
   },
@@ -114,6 +115,17 @@ export default {
         this.org = response.data
         this.loading = false
       })
+    },
+
+    onSubmit() {
+      this.saving = true
+      saveOrg(this.org).then( response => {
+        this.saving = false
+        this.$message('submit!')
+      })
+    },
+    onCancel() {
+      this.getProps()
     }
   }
 }
