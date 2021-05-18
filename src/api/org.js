@@ -14,9 +14,12 @@ export function getOrgsByName(params) {
 }
 export function saveOrg(params) {
   return request({
-    url: `http://${location.hostname}:8081/saveOrg`,
     method: 'post',
-    body: params
+    url: `http://${location.hostname}:8081/saveOrg`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(params)
   })
 }
 

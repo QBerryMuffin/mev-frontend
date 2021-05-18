@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
+    <el-form ref="form" :model="org" label-width="120px">
       <el-form-item label="Org Name">
-        <el-input v-if="org.name === 'default'" v-model="org.name" readonly style="width: 200px;" class="filter-item"/>
+        <el-input v-if="orgName === 'default'" v-model="orgName" readonly style="width: 200px;" class="filter-item"/>
         <el-input v-else v-model="org.name" placeholder="Title" style="width: 200px;" class="filter-item"/>
       </el-form-item>
       <el-form-item label="Description">
-        <el-input v-model="org.decription" style="width: 200px;" class="filter-item" />
+        <el-input v-model="org.description" style="width: 200px;" class="filter-item" />
       </el-form-item>
       <el-form-item label="URL">
         <el-input v-model="org.url" style="width: 200px;" class="filter-item" />
@@ -24,50 +24,60 @@
         <el-input v-model="org.apiHash" style="width: 200px;" class="filter-item" />
       </el-form-item>
       <el-form-item label="Servers">
+      <el-button class="filter-item" style="margin-bottom: 10px;" type="primary" icon="el-icon-circle-plus-outline" @click="handleServerAdd">
+        Add
+      </el-button>
         <el-table
-          v-loading="listLoading"
+          v-loading="loading"
           :data="org.servers"
           border
           highligh-current-row
         >
           <el-table-column label="ID" prop="id" align="center" width="80" >
-            <template slot-scope="{row}" @click="row.edit=true">
-              <el-input v-model="row.id" v-if="row.edit" @blur="row.edit=false"/>
+            <template slot-scope="{row}">
+              <el-input v-model="row.id" v-if="row.edit" />
               <span v-else @click="row.edit=true">{{row.id}}  </span>
 
             </template>
           </el-table-column>
           <el-table-column label="Hostname" prop="hostname" align="center" width="200" >
-            <template slot-scope="{row}" @click="row.edit=true">
-              <el-input v-model="row.hostname" v-if="row.edit" @blur="row.edit=false"/>
+            <template slot-scope="{row}" >
+              <el-input v-model="row.hostname" v-if="row.edit" />
               <span v-else @click="row.edit=true">{{row.hostname}}  </span>
 
             </template>
           </el-table-column>
           <el-table-column label="Type" prop="type" align="center" width="160" >
-            <template slot-scope="{row}" @click="row.edit=true">
-              <el-input v-model="row.type" v-if="row.edit" @blur="row.edit=false"/>
+            <template slot-scope="{row}" >
+              <el-input v-model="row.type" v-if="row.edit" />
               <span v-else @click="row.edit=true">{{row.type}}  </span>
 
             </template>
           </el-table-column>
           <el-table-column label="MAC Address" prop="MAC Address" align="center" width="160" >
-            <template slot-scope="{row}" @click="row.edit=true">
-              <el-input v-model="row['MAC Address']" v-if="row.edit" @blur="row.edit=false"/>
+            <template slot-scope="{row}" >
+              <el-input v-model="row['MAC Address']" v-if="row.edit" />
               <span v-else @click="row.edit=true">{{row['MAC Address']}}  </span>
-
             </template>
           </el-table-column>
           <el-table-column label="IPv6 Address" prop="IPv6 Address" align="center" width="160" >
-            <template slot-scope="{row}" @click="row.edit=true">
-              <el-input v-model="row['IPv6 Address']" v-if="row.edit" @blur="row.edit=false"/>
+            <template slot-scope="{row}" >
+              <el-input v-model="row['IPv6 Address']" v-if="row.edit"/>
               <span v-else @click="row.edit=true">{{row['IPv6 Address']}}  </span>
             </template>
           </el-table-column>
-          <el-table-column label="Description" prop="Description" align="center" @click="row.edit=true">
-            <template slot-scope="{row}" @click="row.edit=true">
-              <el-input v-model="row.description" v-if="row.edit" @blur="row.edit=false"/>
+          <el-table-column label="Description" prop="Description" align="center" >
+            <template slot-scope="{row}" >
+              <el-input v-model="row.description" v-if="row.edit" />
               <span v-else @click="row.edit=true">{{row.description}}  </span>
+
+            </template>
+          </el-table-column>
+          <el-table-column label="" prop="Edit" width="120" >
+            <template slot-scope="{row, $index}" >
+              <el-button type="primary" size="mini" v-if="!row.edit" @click="row.edit=!row.edit" align="left"><svg-icon  icon-class="edit"  /></el-button>
+              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check"/></el-button>
+              <el-button size="mini" type="danger" @click="handleServerDelete(row, $index)"><i class="el-icon-circle-close" align="right" /></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -92,7 +102,7 @@ export default {
   },
   data() {
     return {
-      org: null,
+      org: {},
       orgDefaults: null,
       attributeNames: null,
       orgName: this.type,
@@ -120,12 +130,35 @@ export default {
     onSubmit() {
       this.saving = true
       saveOrg(this.org).then( response => {
+        console.log("response: " + response)
+        this.$message('Organization Saved')
         this.saving = false
-        this.$message('submit!')
+      }).catch(err => {
+        this.$alert('Error Saving: ' + err)
       })
+
     },
     onCancel() {
       this.getProps()
+    },
+    handleServerDelete(row, index) {
+      this.$notify({
+        title: 'Success',
+        message: `Server id ${row.id} Deleted Successfully`,
+        type: 'success',
+        duration: 2000
+      })
+      this.org.servers.splice(index, 1)
+    },
+    handleServerAdd(){
+      this.org.servers.push({
+        "id": this.org.servers.length + 1,
+        "hostname": "",
+        "type": '',
+        "Mac Address": "",
+        "IPv6 Address": "",
+        "description": "",
+        "edit": true})
     }
   }
 }
