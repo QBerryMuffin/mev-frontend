@@ -1,26 +1,26 @@
 import request from '@/utils/request'
 
 export function getOrg(params) {
+  console.log(`API URL: ${process.env.VUE_APP_API_URL}/org/byId/${params.org}`)
   return request({
-    url: `http://${location.hostname}:8081/org/${params.org}`,
+    url: `${process.env.VUE_APP_API_URL}/org/byId/${params.org}`,
     method: 'get'
   })
 }
 export function getOrgsByName(params) {
+  console.log(`API URL: ${process.env.VUE_APP_API_URL}`)
   return request({
-    url: `http://${location.hostname}:8081/getOrgNames`,
+    url: `${process.env.VUE_APP_API_URL}/org/getNames`,
     method: 'get'
   })
 }
 export function saveOrg(params) {
   return request({
     method: 'post',
-    url: `http://${location.hostname}:8081/saveOrg`,
+    url: `${process.env.VUE_APP_API_URL}/org/saveOrg`,
     headers: {
       'Content-Type': 'application/json'
     },
     data: JSON.stringify(params)
   })
 }
-
-

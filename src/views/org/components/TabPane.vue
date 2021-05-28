@@ -23,6 +23,9 @@
       <el-form-item label="API Hash">
         <el-input v-model="org.apiHash" style="width: 200px;" class="filter-item" />
       </el-form-item>
+      <el-form-item label="Default Device Pool">
+        <el-input v-model="org.defaultDevicePool" style="width: 200px;" class="filter-item" />
+      </el-form-item>
       <el-form-item label="Servers">
       <el-button class="filter-item" style="margin-bottom: 10px;" type="primary" icon="el-icon-circle-plus-outline" @click="handleServerAdd">
         Add
@@ -32,6 +35,7 @@
           :data="org.servers"
           border
           highligh-current-row
+          style= "margin-bottom: 10px;"
         >
           <el-table-column label="ID" prop="id" align="center" width="80" >
             <template slot-scope="{row}">
@@ -81,6 +85,40 @@
             </template>
           </el-table-column>
         </el-table>
+        </el-form-item>
+        <el-form-item label="CM Groups">
+      <el-button class="filter-item" style="margin-bottom: 10px;" type="primary" icon="el-icon-circle-plus-outline" @click="handleCMGroupAdd">
+        Add
+      </el-button>
+        <el-table
+          v-loading="loading"
+          :data="org.cmGroups"
+          border
+          highligh-current-row
+        >
+          <el-table-column label="name" prop="cmGroupName" align="center" width="80" >
+            <template slot-scope="{row}">
+              <el-input v-model="row.name" v-if="row.edit" />
+              <span v-else @click="row.edit=true">{{row.name}}  </span>
+
+            </template>
+          </el-table-column>
+          <el-table-column label="Servers" prop="cmGroupServers" align="center" width="200" >
+            <template slot-scope="{row}" >
+              <el-input v-model="row.servers" v-if="row.edit" />
+              <span v-else @click="row.edit=true">{{row.servers}}  </span>
+
+            </template>
+          </el-table-column>
+
+          <el-table-column label="" prop="Edit" width="120" >
+            <template slot-scope="{row, $index}" >
+              <el-button type="primary" size="mini" v-if="!row.edit" @click="row.edit=!row.edit" align="left"><svg-icon  icon-class="edit"  /></el-button>
+              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check"/></el-button>
+              <el-button size="mini" type="danger" @click="handleCMGroupDelete(row, $index)"><i class="el-icon-circle-close" align="right" /></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">Save</el-button>
@@ -118,11 +156,11 @@ export default {
   methods: {
     getProps() {
       this.loading = true
-      getOrg({org: ""}).then(response => {
-        this.orgDefaults = response.data
+      getOrg({org: "default"}).then(response => {
+        this.orgDefaults = response.data[0]
       })
       getOrg({org: this.orgName}).then(response => {
-        this.org = response.data
+        this.org = response.data[0]
         this.loading = false
       })
     },
@@ -158,6 +196,21 @@ export default {
         "Mac Address": "",
         "IPv6 Address": "",
         "description": "",
+        "edit": true})
+    },
+    handleCMGroupDelete(row, index) {
+      this.$notify({
+        title: 'Success',
+        message: `Server id ${row.name} Deleted Successfully`,
+        type: 'success',
+        duration: 2000
+      })
+      this.org.cmGroups.splice(index, 1)
+    },
+    handleCMGroupAdd(){
+      this.org.cmGroups.push({
+        "name": "",
+        "servers": "",
         "edit": true})
     }
   }
