@@ -8,11 +8,12 @@
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
+
   </div>
 </template>
 
 <script>
-import { getOrg, getOrgsByName } from '@/api/org'
+import { getOrgsByName } from '@/api/org'
 import TabPane from './components/TabPane'
 
 export default {
@@ -22,7 +23,7 @@ export default {
     return {
       activeName: 'default',
       orgLoading: true,
-      orgList: null
+      orgList: []
     }
   },
   watch: {
@@ -66,4 +67,3 @@ export default {
     margin: 30px;
   }
 </style>
-
