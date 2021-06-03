@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-form ref="form" :model="org" label-width="120px">
       <el-form-item label="Org Name">
-        <el-input v-if="orgName === 'default'" v-model="orgName" readonly style="width: 200px;" class="filter-item"/>
-        <el-input v-else v-model="org.name" placeholder="Title" style="width: 200px;" class="filter-item"/>
+        <el-input v-if="orgName === 'default'" v-model="orgName" readonly style="width: 200px;" class="filter-item" />
+        <el-input v-else v-model="org.name" placeholder="Title" style="width: 200px;" class="filter-item" />
       </el-form-item>
       <el-form-item label="Description">
         <el-input v-model="org.description" style="width: 200px;" class="filter-item" />
@@ -32,10 +32,10 @@
       </el-button>
         <el-table
           v-loading="loading"
-          :data="org.servers"
+          :data = "org.servers"
           border
           highligh-current-row
-          style= "margin-bottom: 10px;"
+          style = "margin-bottom: 10px;"
         >
           <el-table-column label="ID" prop="id" align="center" width="80" >
             <template slot-scope="{row}">
@@ -66,7 +66,7 @@
           </el-table-column>
           <el-table-column label="IPv6 Address" prop="IPv6 Address" align="center" width="160" >
             <template slot-scope="{row}" >
-              <el-input v-model="row['IPv6 Address']" v-if="row.edit"/>
+              <el-input v-model="row['IPv6 Address']" v-if="row.edit" />
               <span v-else @click="row.edit=true">{{row['IPv6 Address']}}  </span>
             </template>
           </el-table-column>
@@ -80,7 +80,7 @@
           <el-table-column label="" prop="Edit" width="120" >
             <template slot-scope="{row, $index}" >
               <el-button type="primary" size="mini" v-if="!row.edit" @click="row.edit=!row.edit" align="left"><svg-icon  icon-class="edit"  /></el-button>
-              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check"/></el-button>
+              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check" /></el-button>
               <el-button size="mini" type="danger" @click="handleServerDelete(row, $index)"><i class="el-icon-circle-close" align="right" /></el-button>
             </template>
           </el-table-column>
@@ -157,7 +157,7 @@
           <el-table-column label="" prop="Edit" width="120" >
             <template slot-scope="{row, $index}" >
               <el-button type="primary" size="mini" v-if="!row.edit" @click="row.edit=!row.edit" align="left"><svg-icon  icon-class="edit"  /></el-button>
-              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check"/></el-button>
+              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check" /></el-button>
               <el-button size="mini" type="danger" @click="handleSystemPartitionDelete(row, $index)"><i class="el-icon-circle-close" align="right" /></el-button>
             </template>
           </el-table-column>
@@ -191,7 +191,7 @@
           <el-table-column label="" prop="Edit" width="120" >
             <template slot-scope="{row, $index}" >
               <el-button type="primary" size="mini" v-if="!row.edit" @click="row.edit=!row.edit" align="left"><svg-icon  icon-class="edit"  /></el-button>
-              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check"/></el-button>
+              <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check" /></el-button>
               <el-button size="mini" type="danger" @click="handleSitePartitionDelete(row, $index)"><i class="el-icon-circle-close" align="right" /></el-button>
             </template>
           </el-table-column>
@@ -230,9 +230,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="" prop="Edit" width="120" >
+          <el-table-column label='' prop="Edit" width="120" >
             <template slot-scope="{row, $index}" >
-              <el-button type="primary" size="mini" v-if="!row.edit" @click="row.edit=!row.edit" align="left"><svg-icon  icon-class="edit"  /></el-button>
+              <el-button type='primary' size="mini" v-if="!row.edit" @click="row.edit=!row.edit" align="left"><svg-icon  icon-class="edit"  /></el-button>
               <el-button v-if="row.edit" @click="row.edit=!row.edit" align="left" size="mini" type="success"> <i class="el-icon-circle-check"/></el-button>
               <el-button size="mini" type="danger" @click="handleSystemCSSDelete(row, $index)"><i class="el-icon-circle-close" align="right" /></el-button>
             </template>
@@ -240,7 +240,7 @@
         </el-table>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">Save</el-button>
+        <el-button type='primary' @click="onSubmit">Save</el-button>
         <el-button @click="onCancel">Cancel</el-button>
       </el-form-item>
     </el-form>
@@ -248,7 +248,7 @@
 </template>
 
 <script>
-import { getOrg, saveOrg } from '@/api/org'
+import { getObj, saveObj } from '@/api/backend'
 
 export default {
   props: {
@@ -265,40 +265,36 @@ export default {
       orgName: this.type,
       loading: false,
       saving: false,
-      serverType: ["CUCM", "IMP", "CUC"]
+      serverType: ['CUCM', 'IMP', 'CUC']
     }
   },
   created() {
     this.getProps()
-
   },
   methods: {
     getProps() {
       this.loading = true
-      getOrg({org: "default"}).then(response => {
+      getObj({ 'path': '/org/byId/', 'name': 'default' }).then(response => {
         this.orgDefaults = response.data[0]
       })
-      if (this.orgName === ''){
+      if (this.orgName === '') {
         this.org = this.orgDefaults
-        this.orgName = "New Organization"
-      }else {
-        getOrg({org: this.orgName}).then(response => {
+        this.orgName = 'New Organization'
+      } else {
+        getObj({ path: '/org/byId/', name: this.orgName }).then(response => {
           this.org = response.data[0]
           this.loading = false
         })
       }
     },
-
     onSubmit() {
       this.saving = true
-      saveOrg(this.org).then( response => {
-        console.log("response: " + response)
+      saveObj({ 'path': '', 'obj': this.org }).then(response => {
         this.$message('Organization Saved')
         this.saving = false
       }).catch(err => {
         this.$alert('Error Saving: ' + err)
       })
-
     },
     onCancel() {
       this.getProps()
@@ -312,15 +308,16 @@ export default {
       })
       this.org.servers.splice(index, 1)
     },
-    handleServerAdd(){
+    handleServerAdd() {
       this.org.servers.push({
-        "id": this.org.servers.length + 1,
-        "hostname": "",
-        "type": '',
-        "Mac Address": "",
-        "IPv6 Address": "",
-        "description": "",
-        "edit": true})
+        'id': this.org.servers.length + 1,
+        'hostname': '',
+        'type': '',
+        'Mac Address': '',
+        'IPv6 Address': '',
+        'description': '',
+        'edit': true
+      })
     },
     handleCMGroupDelete(row, index) {
       this.$notify({
@@ -331,11 +328,12 @@ export default {
       })
       this.org.cmGroups.splice(index, 1)
     },
-    handleCMGroupAdd(){
+    handleCMGroupAdd() {
       this.org.cmGroups.push({
-        "name": "",
-        "servers": "",
-        "edit": true})
+        name: '',
+        servers: '',
+        edit: true
+      })
     },
     handleSystemPartitionDelete(row, index) {
       this.$notify({
@@ -346,11 +344,12 @@ export default {
       })
       this.org.partitions.systemPartitions.splice(index, 1)
     },
-    handleSystemPartitionAdd(){
+    handleSystemPartitionAdd() {
       this.org.partitions.systemPartitions.push({
-        "id": "",
-        "name": "",
-        "edit": true})
+        id: '',
+        name: '',
+        edit: true
+      })
     },
     handleSitePartitionDelete(row, index) {
       this.$notify({
@@ -361,11 +360,12 @@ export default {
       })
       this.org.partitions.sitePartitions.splice(index, 1)
     },
-    handleSitePartitionAdd(){
+    handleSitePartitionAdd() {
       this.org.partitions.sitePartitions.push({
-        "id": "",
-        "name": "",
-        "edit": true})
+        id: '',
+        name: '',
+        edit: true
+      })
     },
     handleSystemCSSDelete(row, index) {
       this.$notify({
@@ -376,11 +376,12 @@ export default {
       })
       this.org.css.systemCSS.splice(index, 1)
     },
-    handleSystemCSSAdd(){
+    handleSystemCSSAdd() {
       this.org.css.systemCSS.push({
-        "id": "",
-        "name": "",
-        "edit": true})
+        'id': '',
+        'name': '',
+        'edit': true
+      })
     },
     handleSiteCSSDelete(row, index) {
       this.$notify({
@@ -391,11 +392,12 @@ export default {
       })
       this.org.css.siteCSS.splice(index, 1)
     },
-    handleSiteCSSAdd(){
+    handleSiteCSSAdd() {
       this.org.css.siteCSS.push({
-        "id": "",
-        "name": "",
-        "edit": true})
+        id: '',
+        name: '',
+        edit: true
+      })
     }
   }
 }
@@ -406,5 +408,3 @@ export default {
   text-align: center;
 }
 </style>
-
-

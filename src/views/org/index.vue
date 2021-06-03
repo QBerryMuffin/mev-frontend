@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getOrgsByName } from '@/api/org'
+import { getList } from '@/api/backend'
 import TabPane from './components/TabPane'
 
 export default {
@@ -37,8 +37,6 @@ export default {
       this.activeName = tab
     }
     this.fetchData()
-
-
   },
   methods: {
     onSubmit() {
@@ -52,7 +50,7 @@ export default {
     },
     fetchData() {
       this.orgLoading = true
-      getOrgsByName().then(response => {
+      getList({ 'path': '/org/getNames' }).then(response => {
         this.orgList = response.data.items
         this.orgLoading = false
       })

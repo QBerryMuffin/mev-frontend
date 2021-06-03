@@ -87,11 +87,10 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/phone',
     component: Layout,
-    meta: { title: 'Phones', icon: 'el-icon-phone'},
+    meta: { title: 'Phones', icon: 'el-icon-phone' },
     children: [
       {
         path: 'index',
@@ -107,7 +106,6 @@ export const constantRoutes = [
       }
     ]
   },
-
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
