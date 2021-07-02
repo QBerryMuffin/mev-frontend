@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    accessToken: ''
   }
 }
 
@@ -17,7 +18,7 @@ const mutations = {
     Object.assign(state, getDefaultState())
   },
   SET_TOKEN: (state, token) => {
-    state.token = token
+    state.accessToken = token
   },
   SET_NAME: (state, name) => {
     state.name = name

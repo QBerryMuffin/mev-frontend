@@ -32,11 +32,28 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
+    meta: { requireAuth: false}
   },
-
+  {
+    path: '/auth-redirect',
+    component: () => import('@/views/login/auth-redirect'),
+    hidden: true,
+    meta: { requireAuth: false}
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -46,7 +63,16 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/org'
+    redirect: '/org',
+    children: [
+      {
+        path: '',
+        name: 'org',
+        component: () => import('@/views/org/index'),
+        meta: { title: 'Organizations', icon: 'component', requireAuth: true}
+      }
+    ],
+    hidden: true
   },
 
   {
@@ -54,10 +80,10 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: '',
         name: 'org',
         component: () => import('@/views/org/index'),
-        meta: { title: 'Organizations', icon: 'component' }
+        meta: { title: 'Organizations', icon: 'component', affix: true, requireAuth: true}
       }
     ]
   },
@@ -67,10 +93,10 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: '',
         name: 'site',
         component: () => import('@/views/site/index'),
-        meta: { title: 'Sites', icon: 'site' }
+        meta: { title: 'Sites', icon: 'site', affix: true, requireAuth: true}
       }
     ]
   },
@@ -83,7 +109,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'model',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Device Models', icon: 'tree-table' }
+        meta: { title: 'Device Models', icon: 'tree-table', requireAuth: true }
       }
     ]
   },
@@ -96,13 +122,13 @@ export const constantRoutes = [
         path: 'index',
         name: 'table',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Phone Table', icon: 'el-icon-phone' }
+        meta: { title: 'Phone Table', icon: 'el-icon-phone', requireAuth: true }
       },
       {
         path: 'upload-excel',
         component: () => import('@/views/phones/excel/upload-excel'),
         name: 'UploadExcel',
-        meta: { title: 'Upload Excel' }
+        meta: { title: 'Upload Excel', requireAuth: true }
       }
     ]
   },
@@ -114,7 +140,8 @@ export const constantRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRoutes,
+  mode: 'history' // Required for Adal library
 })
 
 const router = createRouter()

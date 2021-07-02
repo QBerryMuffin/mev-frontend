@@ -1,9 +1,13 @@
-import Cookies from 'js-cookie'
+
+import { AuthenticationContext } from 'vue-adal'
+
 
 const TokenKey = 'vue_admin_template_token'
 
+
+
 export function getToken() {
-  return Cookies.get(TokenKey)
+  return ""
 }
 
 export function setToken(token) {

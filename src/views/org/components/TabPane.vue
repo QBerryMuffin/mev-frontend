@@ -274,14 +274,14 @@ export default {
   methods: {
     getProps() {
       this.loading = true
-      getObj({ 'path': '/org/byId/', 'name': 'default' }).then(response => {
+      getObj({ 'path': '/orgs/byId/', 'orgName': 'default' }).then(response => {
         this.orgDefaults = response.data[0]
       })
       if (this.orgName === '') {
         this.org = this.orgDefaults
         this.orgName = 'New Organization'
       } else {
-        getObj({ path: '/org/byId/', name: this.orgName }).then(response => {
+        getObj({ path: '/orgs/byId/', orgName: this.orgName }).then(response => {
           this.org = response.data[0]
           this.loading = false
         })
@@ -289,7 +289,7 @@ export default {
     },
     onSubmit() {
       this.saving = true
-      saveObj({ 'path': '', 'obj': this.org }).then(response => {
+      saveObj({ 'path': '/orgs/save', 'obj': this.org }).then(response => {
         this.$message('Organization Saved')
         this.saving = false
       }).catch(err => {

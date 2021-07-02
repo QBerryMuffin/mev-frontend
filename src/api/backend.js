@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getObj(params) {
   return request({
-    url: `${process.env.VUE_APP_API_URL}${params.path}${params.name}`,
+    url: `${process.env.VUE_APP_API_URL}${params.path}${params.orgName}`,
     method: 'get'
   })
 }

@@ -50,7 +50,7 @@ export default {
     },
     fetchData() {
       this.orgLoading = true
-      getList({ 'path': '/org/getNames' }).then(response => {
+      getList({ 'path': '/orgs/getNames' }).then(response => {
         this.orgList = response.data.items
         this.orgLoading = false
       })

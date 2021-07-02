@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sticky :z-index="10" class-name="navbar">
+    <sticky  v-if="!loadingOrgs" :z-index="10" class-name="navbar">
       <span class="input-label">Organization</span>
       <el-select v-model="activeOrgName" placeholer="select">
         <el-option
@@ -11,21 +11,27 @@
         />
       </el-select>
     </sticky>
+    <span>
+      {{JSON.stringify(orgSiteInfo)}}
+    </span>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/backend'
+import Sticky from '@/components/Sticky'
+import { getList, getObj, saveObj } from '@/api/backend'
 
 export default {
-  name: 'Site',
+  name: 'Sites',
+  components: { Sticky },
   data() {
     return {
       activeOrgName: 'default',
       orgList: [],
-      sites: [],
+      orgSiteInfo: {},
       activeSite: '0',
-      loading: true
+      loadingSite: true,
+      loadingOrgs: true
     }
   },
   watch: {
@@ -35,20 +41,35 @@ export default {
   },
   created() {
     const org = this.$route.query.org
+    this.loadingOrgs = true
     if (org) {
       this.activeName = org
     }
+    getList({ 'path': '/orgs/getNames' }).then(response => {
+      this.orgList = response.data.items
+      this.loadingOrgs = false
+    })
     this.fetchData()
   },
   methods: {
     fetchData() {
-      this.loading = true
-      getList({ 'path': '/org/getNames' }).then(response => {
-        this.orgList = response.data.items
-        this.Loading = false
+      this.loadingSite = true
+      getObj({ 'path': '/sites/byId/', orgName: this.activeOrgName })
+        .then(response => {
+        this.orgSiteInfo = response.data[0]
+        this.loadingSite = false
       })
     }
   }
 }
 </script>
 
+<style scoped>
+.components-container div {
+  margin: 10px;
+}
+
+.time-container {
+  display: inline-block;
+}
+</style>
