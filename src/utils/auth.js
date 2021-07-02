@@ -1,19 +1,32 @@
 
-import { AuthenticationContext } from 'vue-adal'
 
-
-const TokenKey = 'vue_admin_template_token'
-
-
-
-export function getToken() {
-  return ""
+/**
+export function msalLogin() {
+  pca.getAuthCodeUrl(authCodeUrlParameters).then(authCodeUrl => {
+    return authCodeUrl
+  }).catch( error => {
+    console.log(JSON.stringify(error))
+    return error
+  })
+}
+export function msalLogout() {
+  return ''
+}
+export function getUserInfo() {
+  return ''
 }
 
-export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+export function tokenResponse(code) {
+  const tokenRequest = {
+    code: code,
+    scopes: ["user.read"],
+    redirectUri: 'http://localhost:9528/auth-redirect',
+  }
+  pca.acquireTokenByCode(tokenRequest).then( response => {
+    return response
+  }).catch(error => {
+    console.log("error")
+  
+  })
 }
-
-export function removeToken() {
-  return Cookies.remove(TokenKey)
-}
+ */

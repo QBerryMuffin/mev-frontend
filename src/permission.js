@@ -4,11 +4,11 @@ import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import getPageTitle from '@/utils/get-page-title'
-import msal from 'vue-msal-2'
+
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -20,7 +20,7 @@ router.beforeEach(async(to, from, next) => {
   // determine whether the user has logged in
   //built its cookie
   //const hasToken = getToken()
-  if ($msal.isAuthenticated()) {
+  if (store.getters.authenticated) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })

@@ -6,7 +6,7 @@
         <h3 class="title">Sign in with Azure AD</h3>
       </div>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="$msal.signIn()">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin()">Login</el-button>
 
     </el-form>
   </div>
@@ -46,6 +46,15 @@ export default {
       redirect: undefined
     }
   },
+  created (){
+    if(this.$store.getters.authenticated){
+      if(this.redirect){
+        this.$router.push(this.redirect)
+      }else{
+        this.$router.push('/')
+      }
+    }
+  },
   watch: {
     $route: {
       handler: function(route) {
@@ -55,34 +64,31 @@ export default {
     }
   },
   methods: {
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+      console.log(this.$msal)
+      console.log(`store authenticated: ${this.$store.getters.authenticated}`)
+      if(this.$store.getters.authenticated){
+        if(this.redirect){
+          this.$router.push(this.redirect)
+        }else{
+          this.$router.push('/')
+       }
+      }else {
+        
+        this.loading = true
+        try {
+          this.$store.dispatch('user/azureAuth');
+        } catch (err) {
+          console.log(err)
         }
-      })
+        this.loading = false
+        console.log('error submit!!')
+        return false
+      }
     }
   }
 }
+
 </script>
 
 <style lang="scss">

@@ -67,7 +67,7 @@ export const constantRoutes = [
     children: [
       {
         path: '',
-        name: 'org',
+        name: 'home',
         component: () => import('@/views/org/index'),
         meta: { title: 'Organizations', icon: 'component', requireAuth: true}
       }

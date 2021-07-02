@@ -2,11 +2,15 @@
 export default {
   name: 'AuthRedirect',
   created() {
-    const hash = window.location.search.slice(1)
-    if (window.localStorage) {
-      window.localStorage.setItem('x-admin-oauth-code', hash)
-      window.close()
-    }
+    this.$store.dispatch('user/azureAuth').then(()=>{
+      let authed = this.$store.authenticated
+      console.log(`msal auth: ${authed}`)
+      //this.$router.push('/')
+    }).catch((error) => {
+      console.error('error saving auth')
+      //this.$router.push('/login')
+    })
+    console.log(this.$route.query)
   },
   render: function(h) {
     return h() // avoid warning message

@@ -8,8 +8,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 //import axios from 'axios'
 //import { default as Adal, AxiosAuthHttp } from 'vue-adal'
-import msal from 'vue-msal-2'
-
+//import msal from 'vue-msal-2'
+import { default as msalPlugin } from 'vue-msal-browser'
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -17,7 +17,6 @@ import store from './store'
 import router from './router'
 
 import '@/icons' // icon
-//made redudant with vue-adal
 import '@/permission' // permission control
 
 /**
@@ -32,30 +31,26 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+const msalConfig = {
+  auth: {
+    clientId: '82da2cdb-a13b-4436-b208-d6cc6d1a1777',
+    authority: 'https://login.microsoftonline.com/9c13db0d-1783-4d50-affc-ff31d72475b6',
+    clientSecret: '5uXC2imwh7UMes-c-_b9YZ_W9Vk.Ch-11G',
+    redirectUri: 'http://localhost:9528/auth-redirect',
+    scopes: ['user.read']
+  },
+  cache: {
+    cacheLocation: 'sessionStorage',
+  }
+}
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
-Vue.use(msal, {
-  auth: {
-    clientId: '82da2cdb-a13b-4436-b208-d6cc6d1a1777',
-    authority: 'https://login.microsoftonline.com/9c13db0d-1783-4d50-affc-ff31d72475b6',
-    clientSecret: '5uXC2imwh7UMes-c-_b9YZ_W9Vk.Ch-11G',
-    redirectUri: 'http://localhost:9528/'
-  }
-})
+Vue.use(msalPlugin, msalConfig)
 /**
-Vue.use(Adal, {
-  config: {
-    tenant: '9c13db0d-1783-4d50-affc-ff31d72475b6',
-    clientId: "82da2cdb-a13b-4436-b208-d6cc6d1a1777",
-    redirectUri: 'http://localhost:9528/',
-    cacheLocation: 'localStorage'
-  },
-  router: router
-})
 const graphApiBase = `https://graph.windows.net`
 const graphApiResource = '00000002-0000-0000-c000-000000000000'
 Vue.use({
